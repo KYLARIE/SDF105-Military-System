@@ -1,0 +1,87 @@
+/* ADMIN NAVIGATION STRUCTURE */
+.admin-navigation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* HEADER */
+.dashboard-header {
+    background-color: #111827;
+    color: #fff;
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    box-sizing: border-box;
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+/* SIDEBAR - Fixed and always visible */
+.dashboard-sidenav {
+    background-color: #1f2937;
+    width: 220px;
+    position: fixed;
+    top: 0px;
+    left: 0;
+    bottom: 0;
+    padding: 60px 0;
+    z-index: 999;
+    overflow-y: auto;
+}
+
+.dashboard-sidenav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-sidenav li {
+    margin-bottom: 5px;
+}
+
+.dashboard-sidenav a {
+    display: block;
+    padding: 12px 40px;
+    color: #d1d5db;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-sidenav a:hover {
+    background-color: #374151;
+}
+
+/* MAIN CONTENT AREA */
+.main-content {
+    margin-left: 220px;
+    margin-top: 80px;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+    box-sizing: border-box;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+    background-color: #ef4444;
+    padding: 6px 16px;
+    border-radius: 3px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+}

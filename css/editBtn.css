@@ -1,0 +1,101 @@
+/* ==== GLOBAL STYLES ==== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 50px;
+    background-color: #f9fafb;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* ==== HEADINGS AND LINKS ==== */
+h1 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Back button styled like a button */
+a.back-button {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a.back-button:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+}
+
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ==== FORM CONTAINER ==== */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    max-width: 450px;
+    width: 100%;
+}
+
+/* ==== FORM ELEMENTS ==== */
+form label {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 10px 0 6px;
+}
+
+form input,
+form select {
+    width: 425px;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background-color: #f9fafb;
+    transition: border-color 0.3s ease;
+    margin-bottom: 12px;
+}
+form select{
+    width: 450px;
+}
+
+form input:focus,
+form select:focus {
+    border-color: #2563eb;
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* ==== BUTTON ==== */
+button[type="submit"] {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #1d4ed8;
+}

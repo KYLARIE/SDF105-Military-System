@@ -1,0 +1,132 @@
+/* ---------------------------------- */
+/* Base Layout and Body Styles       */
+/* ---------------------------------- */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 40px 80px 50px 80px;
+    padding: 0;
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+.main-content {
+    margin-left: 220px; /* Adjust if sidebar width changes */
+    padding: 20px;
+}
+
+
+/* ---------------------------------- */
+/* Typography                        */
+/* ---------------------------------- */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+a {
+    color: #2563eb;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------- */
+/* Buttons                           */
+/* ---------------------------------- */
+.button-link {
+    display: inline-block;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 8px 16px;
+    margin-right: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button-link:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+}
+
+.table-btn {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-decoration: none;
+    color: #fff;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+    background-color: #10b981; /* green */
+}
+
+.edit-btn:hover {
+    background-color: #059669;
+    text-decoration: none;
+}
+
+.delete-btn {
+    background-color: #ef4444; /* red */
+}
+
+.delete-btn:hover {
+    background-color: #dc2626;
+    text-decoration: none;
+}
+
+
+/* ---------------------------------- */
+/* Flash Messages / Alerts           */
+/* ---------------------------------- */
+.message {
+    background-color: #dcfce7;
+    color: #065f46;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    width: fit-content;
+}
+
+
+/* ---------------------------------- */
+/* Tables                            */
+/* ---------------------------------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    border: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+}
+
+table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+
+/* ---------------------------------- */
+/* Action Links                      */
+/* ---------------------------------- */
+.action-links a {
+    margin-right: 8px;
+    color: #2563eb;
+    font-weight: 500;
+}
