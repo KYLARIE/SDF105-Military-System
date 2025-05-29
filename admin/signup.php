@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <?php if ($success): ?>
         <div class="success"><?php echo htmlspecialchars($success); ?></div>
-        <p><a href="login.php">Go to Login</a></p>
+        <p><a href="login.php" class="success-link">Go to Login</a></p>
     <?php else: ?>
         <form method="post" action="signup.php">
             <h2>Admin Sign Up</h2>
