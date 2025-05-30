@@ -17,7 +17,7 @@
             <li><a href="../ranks/index.php" title="Ranks"><span>Manage Ranks</span></a></li>
             <li><a href="../units/index.php" title="Units"><span>Manage Units</span></a></li>
             <li><a href="../statuses/index.php" title="Statuses"><span>Manage Statuses</span></a></li>
-        </ul>
+            <li><a href="../training/index.php" title="Training"><span>Manage Trainees</span></a></li        </ul>
     </nav>
 
 </div>
