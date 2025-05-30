@@ -1,8 +1,7 @@
 <?php
 require '../config/auth.php';
 require '../config/db.php';
-require 'filter_functions.php'; // ✅ include filter logic
-include_once '../includes/header.php';
+require 'filter_functions.php';
 
 // Handle delete
 if (isset($_GET['delete'])) {

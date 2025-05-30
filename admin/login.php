@@ -18,12 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Success: Set session and redirect
         $_SESSION['admin_id'] = $admin['id'];
         $_SESSION['admin_username'] = $admin['username'];
-        
-        // Set additional profile information in session
-        $_SESSION['user_name'] = $admin['username'];
-        $_SESSION['user_role'] = $admin['role'] ?? 'Administrator';
-        $_SESSION['profile_photo'] = $admin['profile_photo'] ?? '../images/default.jpg';
-        
         header('Location: ../dashboard/index.php');
         exit();
     } else {
