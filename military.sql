@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2025 at 03:09 PM
+-- Generation Time: May 30, 2025 at 10:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,22 @@ INSERT INTO `admins` (`id`, `username`, `password`) VALUES
 (2, 'kyla', '$2y$10$HRHjdClEg4j6PuZrRH3PY.HrtmfiSkHKAl2qJ4AHBPte7jeAKsESu'),
 (3, 'marie', '$2y$10$KyRJMEdQZhIBhge3X/NXLupytmzPDXb7BYhKW5oBk68EzsC6PxKeu'),
 (4, 'we', '$2y$10$JHocptXYZoxDtWXuRimjCOXpH5CUGZIvTJJAtTkBTiRYMUkQ9vLS6'),
-(5, 'qw', '$2y$10$c0/GJ7LZfPFUrXKnYqebF.Sqwb1UWhXNdtGLM5embcLplW7FqPAxC');
+(5, 'qw', '$2y$10$c0/GJ7LZfPFUrXKnYqebF.Sqwb1UWhXNdtGLM5embcLplW7FqPAxC'),
+(6, 'earlrecometa@gmail.com', '$2y$10$nf9jj7UJSZUQATiWIJoRwefbWOAZFF4a.gc1lsnAE6RaGfyMeRPuy');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `export_requests`
+--
+
+CREATE TABLE `export_requests` (
+  `id` int(11) NOT NULL,
+  `requester_id` int(11) NOT NULL,
+  `filters` text NOT NULL,
+  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -79,19 +94,20 @@ CREATE TABLE `people` (
   `military_status` varchar(100) NOT NULL,
   `superior_id` int(11) DEFAULT NULL,
   `file_upload` varchar(255) DEFAULT NULL,
-  `health_id` int(11) DEFAULT NULL
+  `health_id` int(11) DEFAULT NULL,
+  `profile_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `people`
 --
 
-INSERT INTO `people` (`id`, `name`, `age`, `contact`, `email`, `rank_id`, `unit_id`, `military_status`, `superior_id`, `file_upload`, `health_id`) VALUES
-(1, 'Katigbak', 70, '', NULL, 1, 1, 'Active Duty', NULL, NULL, 1),
-(2, 'RIZAL', 18, '', NULL, 3, 1, 'AWOL', 1, NULL, NULL),
-(3, 'Avril', 18, '0909898766', 'yudob0005@gmail.com', 2, 1, 'Veteran', 1, '../uploads/1748520227_Final_Paper04.pdf', NULL),
-(4, 'test', 20, '', NULL, NULL, NULL, 'Active Duty', NULL, NULL, 1),
-(7, 'Karen', 22, '0909876755', NULL, 3, 1, 'Dishonorably Discharged', 1, '1748520628_Final_Paper04.pdf', 1);
+INSERT INTO `people` (`id`, `name`, `age`, `contact`, `email`, `rank_id`, `unit_id`, `military_status`, `superior_id`, `file_upload`, `health_id`, `profile_image`) VALUES
+(1, 'Katigbak', 70, '', NULL, 1, 1, 'Active Duty', NULL, NULL, 1, NULL),
+(2, 'RIZAL', 18, '', NULL, 3, 1, 'AWOL', 1, NULL, NULL, NULL),
+(3, 'Avril', 18, '0909898766', 'yudob0005@gmail.com', 2, 1, 'Veteran', 1, '../uploads/1748520227_Final_Paper04.pdf', NULL, NULL),
+(7, 'Karen', 22, '0909876755', NULL, 3, 1, 'Dishonorably Discharged', 1, '1748520628_Final_Paper04.pdf', 1, NULL),
+(11, 'Earl Recometa', 43, '4366867900-', 'earlrecometa@yahoo.com', 2, NULL, 'Active Duty', NULL, NULL, NULL, '1748578787_WIN_20230928_14_28_27_Pro.jpg');
 
 -- --------------------------------------------------------
 
@@ -169,6 +185,13 @@ ALTER TABLE `admins`
   ADD UNIQUE KEY `username` (`username`);
 
 --
+-- Indexes for table `export_requests`
+--
+ALTER TABLE `export_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `requester_id` (`requester_id`);
+
+--
 -- Indexes for table `health`
 --
 ALTER TABLE `health`
@@ -210,7 +233,13 @@ ALTER TABLE `units`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `export_requests`
+--
+ALTER TABLE `export_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `health`
@@ -222,7 +251,7 @@ ALTER TABLE `health`
 -- AUTO_INCREMENT for table `people`
 --
 ALTER TABLE `people`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `ranks`
@@ -245,6 +274,12 @@ ALTER TABLE `units`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `export_requests`
+--
+ALTER TABLE `export_requests`
+  ADD CONSTRAINT `export_requests_ibfk_1` FOREIGN KEY (`requester_id`) REFERENCES `people` (`id`);
 
 --
 -- Constraints for table `people`

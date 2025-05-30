@@ -1,0 +1,85 @@
+    /* export.css */
+.btn-group {
+    display: flex;
+    gap: 5px;
+    margin: 15px 0;
+}
+
+.view-toggle-btn {
+    padding: 8px 15px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.view-toggle-btn:hover {
+    background: #e0e0e0;
+}
+
+.view-toggle-btn.active {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    font-weight: bold;
+}
+
+.export-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.export-btn {
+    padding: 8px 15px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.export-btn:hover {
+    background: #45a049;
+}
+
+.export-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1;
+    right: 0;
+    border: 1px solid #ddd;
+}
+
+.export-dropdown-content a {
+    color: #333;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    border-bottom: 1px solid #eee;
+}
+
+.export-dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.export-dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #4CAF50;
+}
+
+.export-dropdown:hover .export-dropdown-content {
+    display: block;
+}

@@ -87,3 +87,35 @@ function getFilteredPeople($pdo, $filters) {
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+function generateExport($pdo, $requestId) {
+    // Verify request is approved
+    $stmt = $pdo->prepare("SELECT filters FROM export_requests WHERE id = ? AND status = 'approved'");
+    $stmt->execute([$requestId]);
+    $request = $stmt->fetch();
+    
+    if (!$request) return false;
+    
+    $filters = json_decode($request['filters'], true);
+    $people = getFilteredPeople($pdo, $filters);
+    
+    // Generate HTML for export
+    $html = '<table border="1" style="width:100%;border-collapse:collapse;">';
+    $html .= '<tr><th>ID</th><th>Name</th><th>Age</th><th>Rank</th><th>Unit</th><th>Status</th></tr>';
+    
+    foreach ($people as $person) {
+        $html .= '<tr>';
+        $html .= '<td>'.htmlspecialchars($person['id']).'</td>';
+        $html .= '<td>'.htmlspecialchars($person['name']).'</td>';
+        $html .= '<td>'.htmlspecialchars($person['age']).'</td>';
+        $html .= '<td>'.htmlspecialchars($person['rank_name'] ?? 'N/A').'</td>';
+        $html .= '<td>'.htmlspecialchars($person['unit_name'] ?? 'N/A').'</td>';
+        $html .= '<td>'.htmlspecialchars($person['military_status_name'] ?? 'N/A').'</td>';
+        $html .= '</tr>';
+    }
+    
+    $html .= '</table>';
+    
+    return $html;
+}
