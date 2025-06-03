@@ -281,6 +281,7 @@ body {
 .data-table {
     width: 100%;
     border-collapse: collapse;
+    
 }
 
 .data-table th, 
@@ -294,6 +295,11 @@ body {
     font-weight: 600;
     color: #6c757d;
     font-size: 14px;
+}
+
+.people th {
+   
+    color: #ffffff;
 }
 
 .data-table td {

@@ -1,140 +1,118 @@
 <?php
-require_once '../config/db.php';
-require_once '../config/auth.php';
-include_once '../includes/header.php';
+// Handle export if requested
+if (isset($_GET['export_format'])) {
+    require_once '../config/db.php';
+    require_once '../config/auth.php';
+    require_once 'filter_functions.php';
 
-// Handle delete
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM people WHERE id = ?");
-    $stmt->execute([$id]);
-    header("Location: index.php?deleted=1");
-    exit();
+    $filters = [
+        'rank_id' => $_GET['rank_id'] ?? null,
+        'unit_id' => $_GET['unit_id'] ?? null,
+        'military_status' => $_GET['military_status'] ?? null,
+        'health_id' => $_GET['health_id'] ?? null,
+        'min_age' => $_GET['min_age'] ?? null,
+        'max_age' => $_GET['max_age'] ?? null,
+        'superior_id' => $_GET['superior_id'] ?? null,
+        'has_email' => $_GET['has_email'] ?? null,
+        'has_file' => $_GET['has_file'] ?? null,
+        'name' => $_GET['name'] ?? null,
+    ];
+
+    $people = getFilteredPeople($pdo, $filters);
+
+    // Generate and output the export file
+    switch ($_GET['export_format']) {
+        case 'csv':
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="export_' . date('Y-m-d') . '.csv"');
+
+            $output = fopen('php://output', 'w');
+            // CSV headers
+            fputcsv($output, ['ID', 'Name', 'Age', 'Rank', 'Unit', 'Status', 'Health Status', 'Superior']);
+
+            // CSV data rows
+            foreach ($people as $person) {
+                fputcsv($output, [
+                    $person['id'],
+                    $person['name'],
+                    $person['age'],
+                    $person['rank_name'] ?? 'N/A',
+                    $person['unit_name'] ?? 'N/A',
+                    $person['military_status_name'] ?? 'N/A',
+                    $person['health_status_name'] ?? 'N/A',
+                    $person['superior_name'] ?? 'N/A'
+                ]);
+            }
+            fclose($output);
+            exit;
+
+        case 'excel':
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename="export_' . date('Y-m-d') . '.xls"');
+
+            echo '<table border="1">';
+            echo '<tr><th>ID</th><th>Name</th><th>Age</th><th>Rank</th><th>Unit</th><th>Status</th><th>Health Status</th><th>Superior</th></tr>';
+
+            foreach ($people as $person) {
+                echo '<tr>';
+                echo '<td>' . $person['id'] . '</td>';
+                echo '<td>' . $person['name'] . '</td>';
+                echo '<td>' . $person['age'] . '</td>';
+                echo '<td>' . ($person['rank_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . ($person['unit_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . ($person['military_status_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . ($person['health_status_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . ($person['superior_name'] ?? 'N/A') . '</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+            exit;
+
+        case 'html':
+            header('Content-Type: text/html');
+            header('Content-Disposition: attachment; filename="export_' . date('Y-m-d') . '.html"');
+
+            echo '<!DOCTYPE html>
+            <html>
+            <head>
+                <title>Data Export</title>
+                <style>
+                    table { border-collapse: collapse; width: 100%; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <h1>Data Export - ' . date('Y-m-d H:i:s') . '</h1>
+                <table>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Age</th><th>Rank</th><th>Unit</th>
+                        <th>Status</th><th>Health Status</th><th>Superior</th>
+                    </tr>';
+
+            foreach ($people as $person) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($person['id']) . '</td>';
+                echo '<td>' . htmlspecialchars($person['name']) . '</td>';
+                echo '<td>' . htmlspecialchars($person['age']) . '</td>';
+                echo '<td>' . htmlspecialchars($person['rank_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . htmlspecialchars($person['unit_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . htmlspecialchars($person['military_status_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . htmlspecialchars($person['health_status_name'] ?? 'N/A') . '</td>';
+                echo '<td>' . htmlspecialchars($person['superior_name'] ?? 'N/A') . '</td>';
+                echo '</tr>';
+            }
+
+            echo '</table></body></html>';
+            exit;
+
+        default:
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Invalid export format']);
+            exit;
+    }
 }
 
-// Filters
-$filters = [
-    'rank_id' => $_GET['rank_id'] ?? null,
-    'unit_id' => $_GET['unit_id'] ?? null,
-    'military_status' => $_GET['military_status'] ?? null,
-    'health_id' => $_GET['health_id'] ?? null,
-    'min_age' => $_GET['min_age'] ?? null,
-    'max_age' => $_GET['max_age'] ?? null,
-    'superior_id' => $_GET['superior_id'] ?? null,
-    'has_email' => $_GET['has_email'] ?? null,
-    'has_file' => $_GET['has_file'] ?? null,
-    'name' => $_GET['name'] ?? null, 
-];
-
-$people = getFilteredPeople($pdo, $filters);
-
-// Get dropdown options
-$ranks = $pdo->query("SELECT id, rank_name FROM ranks ORDER BY rank_name")->fetchAll(PDO::FETCH_ASSOC);
-$units = $pdo->query("SELECT id, unit_name FROM units ORDER BY unit_name")->fetchAll(PDO::FETCH_ASSOC);
-$statuses = $pdo->query("SELECT id, status_name FROM statuses ORDER BY status_name")->fetchAll(PDO::FETCH_ASSOC);
-$healthStatuses = $pdo->query("SELECT id, health_status_name FROM health ORDER BY health_status_name")->fetchAll(PDO::FETCH_ASSOC);
-$superiors = $pdo->query("SELECT id, name FROM people ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<!-- Page Title and Actions -->
-<div class="page-header">
-    <div>
-        <h1>Manage Personnel</h1>
-    </div>
-    <div class="page-actions">
-        <a href="add.php" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add New Personnel
-        </a>
-    </div>
-</div>
-
-<!-- Personnel List -->
-<section class="content-section">
-    <div class="section-header">
-        <h2>Personnel List</h2>
-        <div class="section-actions">
-            <div class="search-mini">
-                <input type="text" id="searchInput" placeholder="Search personnel...">
-                <i class="fas fa-search"></i>
-            </div>
-        </div>
-    </div>
-    <div class="section-body">
-        <table class="data-table" id="personnelTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Rank</th>
-                    <th>Unit</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                try {
-                    $stmt = $pdo->query("SELECT p.id, p.first_name, p.last_name, r.name as rank_name, u.name as unit_name, p.status 
-                                        FROM people p 
-                                        LEFT JOIN ranks r ON p.rank_id = r.id 
-                                        LEFT JOIN units u ON p.unit_id = u.id 
-                                        ORDER BY p.id");
-                    
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $status_class = '';
-                        switch(strtolower($row['status'] ?? 'active')) {
-                            case 'active':
-                                $status_class = 'status-active';
-                                break;
-                            case 'inactive':
-                                $status_class = 'status-inactive';
-                                break;
-                            default:
-                                $status_class = 'status-pending';
-                        }
-                        
-                        echo '<tr>';
-                        echo '<td>' . htmlspecialchars($row['id']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['rank_name'] ?? 'N/A') . '</td>';
-                        echo '<td>' . htmlspecialchars($row['unit_name'] ?? 'N/A') . '</td>';
-                        echo '<td><span class="status ' . $status_class . '">' . htmlspecialchars($row['status'] ?? 'Active') . '</span></td>';
-                        echo '<td>
-                                <a href="view.php?id=' . $row['id'] . '" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i></a>
-                                <a href="edit.php?id=' . $row['id'] . '" class="action-btn btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
-                                <a href="delete.php?id=' . $row['id'] . '" class="action-btn btn-delete" title="Delete" onclick="return confirm(\'Are you sure you want to delete this personnel record?\');"><i class="fas fa-trash"></i></a>
-                              </td>';
-                        echo '</tr>';
-                    }
-                } catch (PDOException $e) {
-                    echo '<tr><td colspan="6">No personnel records found</td></tr>';
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<script>
-    // Simple search functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const table = document.getElementById('personnelTable');
-        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        
-        searchInput.addEventListener('keyup', function() {
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            for (let i = 0; i < rows.length; i++) {
-                const rowText = rows[i].textContent.toLowerCase();
-                if (rowText.includes(searchTerm)) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
-        });
-    });
-</script>
-
-<?php include_once '../includes/footer.php'; ?>
+// Include the filter and display sections
+require_once 'filter.php';
+require_once 'people_table.php';

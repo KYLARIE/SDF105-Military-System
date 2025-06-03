@@ -17,13 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_unit'])) {
     $unit_name = trim($_POST['unit_name']);
     $location = trim($_POST['location'] ?? '');
     $commander_id = !empty($_POST['commander_id']) ? (int)$_POST['commander_id'] : null;
-    
+
     try {
         // Check if location column exists
         try {
             $check = $pdo->query("SHOW COLUMNS FROM units LIKE 'location'");
             $locationExists = ($check->rowCount() > 0);
-            
+
             if ($locationExists && $hasCommanderId) {
                 $stmt = $pdo->prepare("INSERT INTO units (unit_name, location, commander_id) VALUES (?, ?, ?)");
                 $stmt->execute([$unit_name, $location, $commander_id]);
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_unit'])) {
             $stmt = $pdo->prepare("INSERT INTO units (unit_name) VALUES (?)");
             $stmt->execute([$unit_name]);
         }
-        
+
         // Set success message
         $_SESSION['success_message'] = "Unit added successfully!";
         header("Location: index.php");
@@ -58,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_unit'])) {
     $unit_name = trim($_POST['unit_name']);
     $location = trim($_POST['location'] ?? '');
     $commander_id = !empty($_POST['commander_id']) ? (int)$_POST['commander_id'] : null;
-    
+
     try {
         // Check if location column exists
         try {
             $check = $pdo->query("SHOW COLUMNS FROM units LIKE 'location'");
             $locationExists = ($check->rowCount() > 0);
-            
+
             if ($locationExists) {
                 $stmt = $pdo->prepare("UPDATE units SET unit_name = ?, location = ?, commander_id = ? WHERE id = ?");
                 $stmt->execute([$unit_name, $location, $commander_id, $unit_id]);
@@ -77,20 +77,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_unit'])) {
             $stmt = $pdo->prepare("UPDATE units SET unit_name = ? WHERE id = ?");
             $stmt->execute([$unit_name, $unit_id]);
         }
-        
+
         // Handle personnel assignments if provided
         if (isset($_POST['personnel']) && is_array($_POST['personnel'])) {
             // First reset all personnel for this unit
             $resetStmt = $pdo->prepare("UPDATE people SET unit_id = NULL WHERE unit_id = ?");
             $resetStmt->execute([$unit_id]);
-            
+
             // Then assign selected personnel to this unit
             $assignStmt = $pdo->prepare("UPDATE people SET unit_id = ? WHERE id = ?");
             foreach ($_POST['personnel'] as $person_id) {
                 $assignStmt->execute([$unit_id, $person_id]);
             }
         }
-        
+
         // Set success message
         $_SESSION['success_message'] = "Unit updated successfully!";
         header("Location: index.php");
@@ -208,7 +208,7 @@ try {
                     } catch (PDOException $e) {
                         // Column check failed, assume no location column
                     }
-                    
+
                     // Get units data
                     if ($hasLocation && $hasCommanderId) {
                         $stmt = $pdo->query("SELECT u.id, u.unit_name, u.location, u.commander_id,
@@ -231,14 +231,14 @@ try {
                                             FROM units u
                                             ORDER BY u.id");
                     }
-                    
+
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         // Determine commander name
                         $commander_name = 'Not Assigned';
                         if ($hasCommanderId && isset($row['commander_id']) && isset($commanders[$row['commander_id']])) {
                             $commander_name = htmlspecialchars($commanders[$row['commander_id']]);
                         }
-                        
+
                         echo '<tr>';
                         echo '<td>' . htmlspecialchars($row['id']) . '</td>';
                         echo '<td>' . htmlspecialchars($row['unit_name']) . '</td>';
@@ -274,22 +274,22 @@ try {
                     <label for="unit_name" class="form-label">Unit Name</label>
                     <input type="text" id="unit_name" name="unit_name" class="form-control" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="location" class="form-label">Location</label>
                     <input type="text" id="location" name="location" class="form-control">
                 </div>
-                
+
                 <?php if ($hasCommanderId): ?>
-                <div class="form-group">
-                    <label for="commander_id" class="form-label">Commander</label>
-                    <select id="commander_id" name="commander_id" class="form-control">
-                        <option value="">-- Select Commander --</option>
-                        <?php foreach ($commanders as $id => $name): ?>
-                        <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="commander_id" class="form-label">Commander</label>
+                        <select id="commander_id" name="commander_id" class="form-control">
+                            <option value="">-- Select Commander --</option>
+                            <?php foreach ($commanders as $id => $name): ?>
+                                <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 <?php endif; ?>
             </form>
         </div>
@@ -310,32 +310,32 @@ try {
         <div class="modal-body">
             <form action="" method="post" id="edit-unit-form">
                 <input type="hidden" id="edit_unit_id" name="unit_id">
-                
+
                 <div class="form-group">
                     <label for="edit_unit_name" class="form-label">Unit Name</label>
                     <input type="text" id="edit_unit_name" name="unit_name" class="form-control" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="edit_location" class="form-label">Location</label>
                     <input type="text" id="edit_location" name="location" class="form-control">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="edit_commander_id" class="form-label">Commander</label>
                     <select id="edit_commander_id" name="commander_id" class="form-control">
                         <option value="">-- Select Commander --</option>
                         <?php foreach ($commanders as $id => $name): ?>
-                        <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
+                            <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                
+
                 <hr>
-                
+
                 <h4>Assign Personnel</h4>
                 <p class="text-muted">Select personnel to assign to this unit</p>
-                
+
                 <div class="personnel-table-container">
                     <table class="data-table" id="personnelTable">
                         <thead>
@@ -347,27 +347,27 @@ try {
                         </thead>
                         <tbody>
                             <?php foreach ($allPersonnel as $id => $person): ?>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="personnel[]" value="<?= $id ?>" class="personnel-checkbox" 
-                                           data-unit-id="<?= $person['unit_id'] ?>">
-                                </td>
-                                <td><?= htmlspecialchars($person['name']) ?></td>
-                                <td class="current-unit">
-                                    <?php 
-                                    if (!empty($person['unit_id']) && isset($units)) {
-                                        foreach ($units as $unit) {
-                                            if ($unit['id'] == $person['unit_id']) {
-                                                echo htmlspecialchars($unit['unit_name']);
-                                                break;
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="personnel[]" value="<?= $id ?>" class="personnel-checkbox"
+                                            data-unit-id="<?= $person['unit_id'] ?>">
+                                    </td>
+                                    <td><?= htmlspecialchars($person['name']) ?></td>
+                                    <td class="current-unit">
+                                        <?php
+                                        if (!empty($person['unit_id']) && isset($units)) {
+                                            foreach ($units as $unit) {
+                                                if ($unit['id'] == $person['unit_id']) {
+                                                    echo htmlspecialchars($unit['unit_name']);
+                                                    break;
+                                                }
                                             }
+                                        } else {
+                                            echo 'Not Assigned';
                                         }
-                                    } else {
-                                        echo 'Not Assigned';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
+                                        ?>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -382,23 +382,23 @@ try {
 </div>
 
 <style>
-.modal-lg {
-    width: 800px;
-    max-width: 90%;
-}
+    .modal-lg {
+        width: 800px;
+        max-width: 90%;
+    }
 
-.personnel-table-container {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-}
+    .personnel-table-container {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+    }
 
-#personnelTable th:first-child,
-#personnelTable td:first-child {
-    text-align: center;
-}
+    #personnelTable th:first-child,
+    #personnelTable td:first-child {
+        text-align: center;
+    }
 </style>
 
 <script>
@@ -407,10 +407,10 @@ try {
         const searchInput = document.getElementById('searchInput');
         const table = document.getElementById('unitsTable');
         const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        
+
         searchInput.addEventListener('keyup', function() {
             const searchTerm = searchInput.value.toLowerCase();
-            
+
             for (let i = 0; i < rows.length; i++) {
                 const rowText = rows[i].textContent.toLowerCase();
                 if (rowText.includes(searchTerm)) {
@@ -420,59 +420,59 @@ try {
                 }
             }
         });
-        
+
         // Add Unit Modal
         const addModal = document.getElementById('addUnitModal');
         const addUnitBtn = document.getElementById('addUnitBtn');
         const addCloseBtn = addModal.querySelector('.modal-close');
         const addCloseBtnFooter = addModal.querySelector('.modal-close-btn');
-        
+
         function openAddModal() {
             addModal.classList.add('show');
         }
-        
+
         function closeAddModal() {
             addModal.classList.remove('show');
         }
-        
+
         addUnitBtn.addEventListener('click', openAddModal);
         addCloseBtn.addEventListener('click', closeAddModal);
         addCloseBtnFooter.addEventListener('click', closeAddModal);
-        
+
         // Edit Unit Modal
         const editModal = document.getElementById('editUnitModal');
         const editBtns = document.querySelectorAll('.edit-unit-btn');
         const editCloseBtn = editModal.querySelector('.modal-close');
         const editCloseBtnFooter = editModal.querySelector('.modal-close-btn');
         const editForm = document.getElementById('edit-unit-form');
-        
+
         function openEditModal(unitId) {
             // Fill form with unit data
             const unit = unitData[unitId];
             document.getElementById('edit_unit_id').value = unit.id;
             document.getElementById('edit_unit_name').value = unit.name;
             document.getElementById('edit_location').value = unit.location || '';
-            
+
             const commanderSelect = document.getElementById('edit_commander_id');
             if (unit.commander_id) {
                 commanderSelect.value = unit.commander_id;
             } else {
                 commanderSelect.selectedIndex = 0;
             }
-            
+
             // Check personnel checkboxes for this unit
             const checkboxes = document.querySelectorAll('.personnel-checkbox');
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = (checkbox.getAttribute('data-unit-id') == unit.id);
             });
-            
+
             editModal.classList.add('show');
         }
-        
+
         function closeEditModal() {
             editModal.classList.remove('show');
         }
-        
+
         editBtns.forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -480,20 +480,20 @@ try {
                 openEditModal(unitId);
             });
         });
-        
+
         editCloseBtn.addEventListener('click', closeEditModal);
         editCloseBtnFooter.addEventListener('click', closeEditModal);
-        
+
         // Select all checkbox
         const selectAllCheckbox = document.getElementById('select-all');
         const personnelCheckboxes = document.querySelectorAll('.personnel-checkbox');
-        
+
         selectAllCheckbox.addEventListener('change', function() {
             personnelCheckboxes.forEach(function(checkbox) {
                 checkbox.checked = selectAllCheckbox.checked;
             });
         });
-        
+
         // Close modals when clicking outside
         window.addEventListener('click', function(e) {
             if (e.target === addModal) {

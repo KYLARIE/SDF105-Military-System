@@ -1,0 +1,139 @@
+/* Compact Filter CSS */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --border-radius: 3px;
+    --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --transition: all 0.2s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.4;
+    background-color: #f5f7fa;
+    padding: 15px;
+}
+
+.filter-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.filter-card h3 {
+    margin: 0 0 12px 0;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-form {
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    height: 32px;
+}
+
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.range-inputs input {
+    flex: 1;
+    min-width: 50px;
+}
+
+.range-inputs span {
+    color: #777;
+    font-size: 0.8rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 3px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.checkmark {
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+
+.btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: var(--border-radius);
+    height: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        gap: 8px;
+    }
+    
+    .form-group {
+        min-width: 100%;
+    }
+    
+    .checkbox-group {
+        gap: 10px;
+    }
+    
+    .form-actions {
+        justify-content: flex-start;
+    }
+}

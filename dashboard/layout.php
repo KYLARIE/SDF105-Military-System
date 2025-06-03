@@ -48,7 +48,7 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
                 <span>Military System</span>
             </a>
         </div>
-        
+
         <!-- Sidebar Menu -->
         <ul>
             <li>
@@ -69,6 +69,11 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
             <li>
                 <a href="../units/index.php" class="<?= $current_dir == 'units' ? 'active' : '' ?>">
                     <i class="fas fa-sitemap"></i> Manage Units
+                </a>
+            </li>
+            <li>
+                <a href="../training/index.php" class="<?= $current_dir == 'Training' ? 'active' : '' ?>">
+                    <i class="fas fa-sitemap"></i> Manage Trainees
                 </a>
             </li>
             <li>
@@ -95,11 +100,11 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
         <div class="mobile-menu-toggle" id="mobile-toggle">
             <i class="fas fa-bars"></i>
         </div>
-        
+
         <!-- Dashboard Title -->
         <div class="dashboard-title">
             <?php
-            switch($current_dir) {
+            switch ($current_dir) {
                 case 'dashboard':
                     echo 'Dashboard';
                     break;
@@ -127,8 +132,8 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
         <div class="header-right">
             <!-- Profile Link -->
             <a href="../profile/index.php" class="profile-link">
-                <img src="<?= htmlspecialchars($_SESSION['profile_photo'] ?? '../images/default.jpg') ?>" 
-                    alt="Profile Picture" 
+                <img src="<?= htmlspecialchars($_SESSION['profile_photo'] ?? '../images/default.jpg') ?>"
+                    alt="Profile Picture"
                     class="profile-pic"
                     id="header-profile-pic">
                 <div class="user-info">
