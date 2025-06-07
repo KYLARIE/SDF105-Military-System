@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Add export CSS -->
+    <link rel="stylesheet" href="../css/export.css">
+</head>
+<body>
 <?php
 require_once '../config/db.php';
 require_once '../config/auth.php';
@@ -204,4 +211,9 @@ $ranks = $stmt->fetchAll(PDO::FETCH_ASSOC);
     });
 </script>
 
+<!-- Add export functionality -->
+<script src="../js/export.js"></script>
+
 <?php include_once '../includes/footer.php'; ?>
+</body>
+</html>

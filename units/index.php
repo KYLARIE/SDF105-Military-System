@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Add export CSS -->
+    <link rel="stylesheet" href="../css/export.css">
+</head>
+<body>
 <?php
 require_once '../config/db.php';
 require_once '../config/auth.php';
@@ -24,18 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_unit'])) {
             $check = $pdo->query("SHOW COLUMNS FROM units LIKE 'location'");
             $locationExists = ($check->rowCount() > 0);
 
-            if ($locationExists && $hasCommanderId) {
+            // Insert unit with commander_id
+            if ($locationExists) {
                 $stmt = $pdo->prepare("INSERT INTO units (unit_name, location, commander_id) VALUES (?, ?, ?)");
                 $stmt->execute([$unit_name, $location, $commander_id]);
-            } else if ($locationExists) {
-                $stmt = $pdo->prepare("INSERT INTO units (unit_name, location) VALUES (?, ?)");
-                $stmt->execute([$unit_name, $location]);
-            } else if ($hasCommanderId) {
+            } else {
                 $stmt = $pdo->prepare("INSERT INTO units (unit_name, commander_id) VALUES (?, ?)");
                 $stmt->execute([$unit_name, $commander_id]);
-            } else {
-                $stmt = $pdo->prepare("INSERT INTO units (unit_name) VALUES (?)");
-                $stmt->execute([$unit_name]);
             }
         } catch (PDOException $e) {
             // If error checking columns, just insert unit_name
@@ -247,7 +249,7 @@ try {
                         echo '<td>' . htmlspecialchars($row['personnel_count']) . '</td>';
                         echo '<td>
                                 <a href="view.php?id=' . $row['id'] . '" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i></a>
-                                <a href="edit.php?id=' . $row['id'] . '" class="action-btn btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="action-btn btn-edit edit-unit-btn" data-id="' . $row['id'] . '" title="Edit"><i class="fas fa-edit"></i></a>
                                 <a href="delete.php?id=' . $row['id'] . '" class="action-btn btn-delete" title="Delete" onclick="return confirm(\'Are you sure you want to delete this unit?\');"><i class="fas fa-trash"></i></a>
                               </td>';
                         echo '</tr>';
@@ -280,17 +282,15 @@ try {
                     <input type="text" id="location" name="location" class="form-control">
                 </div>
 
-                <?php if ($hasCommanderId): ?>
-                    <div class="form-group">
-                        <label for="commander_id" class="form-label">Commander</label>
-                        <select id="commander_id" name="commander_id" class="form-control">
-                            <option value="">-- Select Commander --</option>
-                            <?php foreach ($commanders as $id => $name): ?>
-                                <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                <?php endif; ?>
+                <div class="form-group">
+                    <label for="commander_id" class="form-label">Commander</label>
+                    <select id="commander_id" name="commander_id" class="form-control">
+                        <option value="">-- Select Commander --</option>
+                        <?php foreach ($commanders as $id => $name): ?>
+                            <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </form>
         </div>
         <div class="modal-footer">
@@ -402,6 +402,17 @@ try {
 </style>
 
 <script>
+    // Unit data for edit modal
+    const unitData = {};
+    <?php foreach ($units as $unit): ?>
+    unitData[<?= $unit['id'] ?>] = {
+        id: <?= $unit['id'] ?>,
+        name: "<?= addslashes($unit['unit_name']) ?>",
+        location: "<?= isset($unit['location']) ? addslashes($unit['location']) : '' ?>",
+        commander_id: <?= isset($unit['commander_id']) && !empty($unit['commander_id']) ? $unit['commander_id'] : 'null' ?>
+    };
+    <?php endforeach; ?>
+
     document.addEventListener('DOMContentLoaded', function() {
         // Search functionality
         const searchInput = document.getElementById('searchInput');
@@ -506,4 +517,9 @@ try {
     });
 </script>
 
+<!-- Add export functionality -->
+<script src="../js/export.js"></script>
+
 <?php include_once '../includes/footer.php'; ?>
+</body>
+</html>

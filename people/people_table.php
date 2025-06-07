@@ -15,7 +15,6 @@
                             <th>Status</th>
                             <th>Medical</th>
                             <th>Superior</th>
-                            <th>Documents</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -55,15 +54,6 @@
                                 <td><span class="status <?= $status_class ?>"><?= htmlspecialchars($person['military_status_name'] ?? 'N/A') ?></span></td>
                                 <td><?= htmlspecialchars($person['health_status_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($person['superior_name'] ?? 'None') ?></td>
-                                <td>
-                                    <?php if (!empty($person['file_upload'])): ?>
-                                        <a href="../uploads/<?= htmlspecialchars($person['file_upload']) ?>" target="_blank" class="document-link">
-                                            <i class="fas fa-file-alt"></i> View
-                                        </a>
-                                    <?php else: ?>
-                                        N/A
-                                    <?php endif; ?>
-                                </td>
                                 <td class="actions">
                                     <a href="edit.php?id=<?= $person['id'] ?>" class="action-btn btn-edit" title="Edit">
                                         <i class="fas fa-edit"></i>
@@ -141,14 +131,6 @@
                                 <span class="detail-label">Superior:</span>
                                 <span><?= htmlspecialchars($person['superior_name'] ?? 'None') ?></span>
                             </div>
-                            <?php if (!empty($person['file_upload'])): ?>
-                                <div class="detail-item">
-                                    <span class="detail-label">Document:</span>
-                                    <a href="../uploads/<?= htmlspecialchars($person['file_upload']) ?>" target="_blank" class="document-link">
-                                        <i class="fas fa-file-alt"></i> View
-                                    </a>
-                                </div>
-                            <?php endif; ?>
                         </div>
 
                         <div class="card-actions">

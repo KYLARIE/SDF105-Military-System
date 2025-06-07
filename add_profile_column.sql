@@ -1,0 +1,2 @@
+USE military;
+ALTER TABLE people ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255) DEFAULT NULL AFTER health_id; 

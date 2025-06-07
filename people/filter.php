@@ -51,15 +51,28 @@ $superiors = $pdo->query("SELECT id, name FROM people ORDER BY name")->fetchAll(
         </nav>
     </div>
     <div class="page-actions">
-        <a href="add.php" class="btn btn-primary">
+        <button id="openAddPersonnelModal" class="btn btn-primary">
             <i class="fas fa-plus"></i> Add Personnel
-        </a>
+        </button>
     </div>
 </div>
 
 <?php if (isset($_GET['deleted'])): ?>
     <div class="alert alert-success">
         Record deleted successfully!
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_GET['added'])): ?>
+    <div class="alert alert-success">
+        Personnel added successfully!
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['success_message'])): ?>
+    <div class="alert alert-success">
+        <?= $_SESSION['success_message'] ?>
+        <?php unset($_SESSION['success_message']); ?>
     </div>
 <?php endif; ?>
 

@@ -9,45 +9,46 @@ include_once '../includes/header.php';
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
 </style>
 
-<!-- Slideshow Section -->
-<section class="slideshow-container">
-    <div class="slideshow">
-        <div class="slide fade">
-            <img src="../images/affairs.jpg" alt="Military Personnel" style="width:100%">
-            <div class="slide-caption">
-                <h2 class="jost-heading">Philippine Army, Veterans Federation of the Phil sign usufruct deal </h2>
-                <p class="libre-franklin-text">Veterans' Federation of the Philippines (VFP) President retired Maj. Gen. Romeo D. Alamillo renders courtesy call on Army Chief Lt. Gen. Roy M. Galido prior to the signing of the usufruct deal at the Headquarters Philippine Army, Fort</p>
+<!-- Main Dashboard Container -->
+<div class="dashboard-container">
+    <!-- Slideshow Section (Left Side) -->
+    <section class="slideshow-section">
+        <div class="slideshow">
+            <div class="slide fade">
+                <img src="../images/affairs.jpg" alt="Military Personnel" style="width:100%">
+                <div class="slide-caption">
+                    <h2 class="jost-heading">Philippine Army, Veterans Federation of the Phil sign usufruct deal </h2>
+                    <p class="libre-franklin-text">Veterans' Federation of the Philippines (VFP) President retired Maj. Gen. Romeo D. Alamillo renders courtesy call on Army Chief Lt. Gen. Roy M. Galido prior to the signing of the usufruct deal at the Headquarters Philippine Army, Fort</p>
+                </div>
+            </div>
+
+            <div class="slide fade">
+                <img src="../images/soldiers.png" alt="Military Units" style="width:100%">
+                <div class="slide-caption">
+                    <h2 class="jost-heading">Philippine Army, US troops simulate Air Assault in Northern Philippines </h2>
+                    <p class="libre-franklin-text">Philippine Army troops and their U.S. counterparts prepare for an airfield security on May 24, 2025 at Calayan Air strip as part of Exercise SALAKNIB Phase</p>
+                </div>
+            </div>
+
+            <div class="slide fade">
+                <img src="../images/vals.jpg" alt="Military Ranks" style="width:100%">
+                <div class="slide-caption">
+                    <h2 class="jost-heading">Values</h2>
+                    <p class="libre-franklin-text">Philippine Army, Serving the People Securing the Land</p>
+                </div>
+            </div>
+
+            <!-- Navigation dots -->
+            <div class="slideshow-dots">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
             </div>
         </div>
+    </section>
 
-        <div class="slide fade">
-            <img src="../images/soldiers.png" alt="Military Units" style="width:100%">
-            <div class="slide-caption">
-                <h2 class="jost-heading">Philippine Army, US troops simulate Air Assault in Northern Philippines </h2>
-                <p class="libre-franklin-text">Philippine Army troops and their U.S. counterparts prepare for an airfield security on May 24, 2025 at Calayan Air strip as part of Exercise SALAKNIB Phase</p>
-            </div>
-        </div>
-
-        <div class="slide fade">
-            <img src="../images/vals.jpg" alt="Military Ranks" style="width:100%">
-            <div class="slide-caption">
-                <h2 class="jost-heading">Values</h2>
-                <p class="libre-franklin-text">Philippine Army, Serving the People Securing the Land</p>
-            </div>
-        </div>
-
-        <!-- Navigation dots -->
-        <div class="slideshow-dots">
-            <span class="dot" onclick="currentSlide(1)"></span>
-            <span class="dot" onclick="currentSlide(2)"></span>
-            <span class="dot" onclick="currentSlide(3)"></span>
-        </div>
-    </div>
-</section>
-
-<!-- Quick Stats -->
-<section class="quick-stats">
-    <div class="stats-grid">
+    <!-- Quick Stats (Right Side) -->
+    <section class="quick-stats">
         <?php
         try {
             $people_count = $pdo->query("SELECT COUNT(*) FROM people")->fetchColumn();
@@ -91,8 +92,8 @@ include_once '../includes/header.php';
                 <i class="fas fa-sitemap"></i>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
 
 <style>
 /* Font Definitions */
@@ -126,10 +127,17 @@ include_once '../includes/header.php';
   margin: 10px 0;
 }
 
-/* Slideshow styles */
-.slideshow-container {
-    width: 100%;
-    margin-bottom: 30px;
+/* Dashboard container layout */
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+/* Slideshow styles - left side */
+.slideshow-section {
+    flex: 2;
     position: relative;
     overflow: hidden;
     border-radius: 8px;
@@ -153,7 +161,7 @@ include_once '../includes/header.php';
 
 .slide img {
     width: 100%;
-    height: 400px;
+    height: 500px;
     object-fit: cover;
     display: block;
 }
@@ -212,6 +220,14 @@ include_once '../includes/header.php';
     to {opacity: 1}
 }
 
+/* Quick Stats - right side */
+.quick-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 /* Stat card styles */
 .stat-card {
     position: relative;
@@ -237,76 +253,72 @@ include_once '../includes/header.php';
     color: #1e4620; /* Match accent color */
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    
+    .slide img {
+        height: 350px;
+    }
 }
 
-.stat-card h3 {
-    margin-top: 0;
-    color: #333;
-}
-
-.stat-card a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #1e4620; /* Match accent color */
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.stat-card a:hover {
-    color: #2a582c; /* Slightly darker accent color on hover */
+@media (max-width: 576px) {
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .slide img {
+        height: 250px;
+    }
 }
 </style>
 
 <script>
 let slideIndex = 1;
-
-// Initialize slideshow when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    showSlides(slideIndex);
-    // Auto advance slides every 5 seconds
-    setInterval(function() {
-        plusSlides(1);
-    }, 5000);
-});
+showSlides(slideIndex);
 
 // Next/previous controls
 function plusSlides(n) {
-    showSlides(slideIndex += n);
+  showSlides(slideIndex += n);
 }
 
 // Thumbnail image controls
 function currentSlide(n) {
-    showSlides(slideIndex = n);
+  showSlides(slideIndex = n);
 }
 
 function showSlides(n) {
-    let i;
-    let slides = document.getElementsByClassName("slide");
-    let dots = document.getElementsByClassName("dot");
-    
-    if (n > slides.length) {slideIndex = 1}
-    if (n < 1) {slideIndex = slides.length}
-    
-    // Hide all slides
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    
-    // Remove active class from all dots
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    
-    // Show current slide and activate corresponding dot
-    slides[slideIndex-1].style.display = "block";
-    dots[slideIndex-1].className += " active";
+  let i;
+  let slides = document.getElementsByClassName("slide");
+  let dots = document.getElementsByClassName("dot");
+  
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
 }
+
+// Auto slideshow
+setInterval(function() {
+  plusSlides(1);
+}, 5000);
 </script>
 
 <?php include_once '../includes/footer.php'; ?>
