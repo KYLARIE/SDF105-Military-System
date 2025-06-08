@@ -7,7 +7,7 @@ $ranks = $pdo->query("SELECT * FROM ranks ORDER BY rank_name")->fetchAll();
 $units = $pdo->query("SELECT * FROM units ORDER BY unit_name")->fetchAll();
 $personnel = $pdo->query("SELECT * FROM people ORDER BY name")->fetchAll();
 $health_statuses = $pdo->query("SELECT * FROM health ORDER BY health_status_name")->fetchAll();
-$statuses = ['Active Duty', 'Reserve', 'National Guard', 'Veteran', 'Retired', 'Dishonorably Discharged', 'AWOL'];
+$statuses = ['Active', 'Reserve', 'National Guard', 'Veteran', 'Retired', 'Dishonorably Discharged', 'AWOL'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profileImageName = null;
@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Add Military Personnel</title>
     <link rel="stylesheet" href="../css/addBtn.css">
@@ -84,11 +85,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             user-select: none;
             transition: background-color 0.3s;
         }
+
         #profileImageBox:hover {
             background-color: #f0f0f0;
         }
     </style>
 </head>
+
 <body>
     <a href="index.php" class="back-button">← Back</a>
 
@@ -188,4 +191,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     </script>
 </body>
+
 </html>

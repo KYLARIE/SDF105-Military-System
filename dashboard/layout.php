@@ -73,12 +73,12 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
             </li>
             <li>
                 <a href="../training/index.php" class="<?= $current_dir == 'Training' ? 'active' : '' ?>">
-                    <i class="fas fa-sitemap"></i> Manage Trainees
+                    <i class="fas fa-chalkboard-teacher"></i> Manage Trainees
                 </a>
             </li>
             <li>
-                <a href="../reports/index.php" class="<?= $current_dir == 'reports' ? 'active' : '' ?>">
-                    <i class="fas fa-chart-bar"></i> Reports
+                <a href="../statuses/index.php" class="<?= $current_dir == 'reports' ? 'active' : '' ?>">
+                    <i class="fas fa-chart-bar"></i> Manage Statuses
                 </a>
             </li>
             <li>

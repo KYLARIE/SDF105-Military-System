@@ -39,14 +39,20 @@
 
                 // Insert into people table with all necessary fields
                 $stmt = $pdo->prepare("INSERT INTO people 
-                                 (name, age, profile_image, document, status) 
-                                 VALUES (?, ?, ?, ?, 'active')");
+                    (profile_image, name, age, military_status, health_id, unit_id, rank_id, document) 
+                    VALUES (?, ?, ?, ?,?,?,?, ?)");
                 $stmt->execute([
                     $training['profile_image'] ?? null,
                     $training['name'],
                     $training['age'],
-                    $training['document'] ?? null
+                    'Active',
+                    '2',
+                    '5',
+                    '1',
+                    $training['document'],
+
                 ]);
+
 
                 // Update training status to deployed
                 $stmt = $pdo->prepare("UPDATE training SET status = 'deployed' WHERE id = ?");

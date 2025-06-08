@@ -15,13 +15,14 @@
                             <th>Status</th>
                             <th>Medical</th>
                             <th>Superior</th>
+                            <th>Documents</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($people as $person):
                             $status_class = '';
-                            switch (strtolower($person['military_status_name'] ?? 'active')) {
+                            switch (strtolower($person['military_status'] ?? 'active')) {
                                 case 'active':
                                     $status_class = 'status-active';
                                     break;
@@ -36,14 +37,29 @@
                                 <td><?= htmlspecialchars($person['id']) ?></td>
                                 <td>
                                     <?php
-                                    $profileImagePath = '../uploads/profile_images/' . ($person['profile_image'] ?? '');
-                                    if (!empty($person['profile_image']) && file_exists($profileImagePath)): ?>
-                                        <img src="<?= $profileImagePath ?>" class="profile-img" alt="Profile Image">
-                                    <?php else: ?>
+                                    $profileFile = $person['profile_image'] ?? '';
+                                    $profileImagePath = '';
+
+                                    if (!empty($profileFile) && file_exists('../uploads/profile_images/' . $profileFile)) {
+                                        $profileImagePath = '../uploads/profile_images/' . $profileFile;
+                                    } else if (!empty($profileFile) && file_exists('../uploads/profile_pics/' . $profileFile)) {
+                                        $profileImagePath = '../uploads/profile_pics/' . $profileFile;
+                                    } else if (!empty($profileFile) && file_exists('../uploads/documents/' . $profileFile)) {
+                                        $profileImagePath = '../uploads/documents/' . $profileFile;
+                                    } else if (!empty($profileFile) && file_exists('../uploads/' . $profileFile)) {
+                                        $profileImagePath = '../uploads/' . $profileFile;
+                                    }
+                                    ?>
+
+                                    <?php if (!empty($profileImagePath)) : ?>
+                                        <img src="<?= $profileImagePath ?>" class="profile-img" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                    <?php else : ?>
                                         <div class="profile-initials">
-                                            <?= !empty($person['name']) ? substr(trim($person['name']), 0, 1) : '?' ?>
+                                            <?= !empty($person['name']) ? strtoupper(substr(trim($person['name']), 0, 1)) : '?' ?>
                                         </div>
                                     <?php endif; ?>
+
+
                                 </td>
                                 <td><?= htmlspecialchars($person['name']) ?></td>
                                 <td><?= htmlspecialchars($person['age']) ?></td>
@@ -51,9 +67,18 @@
                                 <td><?= htmlspecialchars($person['email'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($person['rank_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($person['unit_name'] ?? 'N/A') ?></td>
-                                <td><span class="status <?= $status_class ?>"><?= htmlspecialchars($person['military_status_name'] ?? 'N/A') ?></span></td>
+                                <td><span class="status <?= $status_class ?>"><?= htmlspecialchars($person['military_status'] ?? 'N/A') ?></span></td>
                                 <td><?= htmlspecialchars($person['health_status_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($person['superior_name'] ?? 'None') ?></td>
+                                <td>
+                                    <?php if (!empty($person['document'])): ?>
+                                        <a href="../uploads/documents/<?= htmlspecialchars($person['document']) ?>" target="_blank" class="document-link">
+                                            <i class="fas fa-file-alt"></i> View
+                                        </a>
+                                    <?php else: ?>
+                                        N/A
+                                    <?php endif; ?>
+                                </td>
                                 <td class="actions">
                                     <a href="edit.php?id=<?= $person['id'] ?>" class="action-btn btn-edit" title="Edit">
                                         <i class="fas fa-edit"></i>
@@ -71,7 +96,7 @@
             <div class="cards-container">
                 <?php foreach ($people as $person):
                     $status_class = '';
-                    switch (strtolower($person['military_status_name'] ?? 'active')) {
+                    switch (strtolower($person['military_status'] ?? 'active')) {
                         case 'active':
                             $status_class = 'status-active';
                             break;
@@ -86,9 +111,9 @@
                         <div class="card-header">
                             <div class="profile-pic">
                                 <?php
-                                $profileImagePath = '../uploads/profile_images/' . ($person['profile_image'] ?? '');
+                                $profileImagePath = '../uploads/profile_pics/' . ($person['profile_pics'] ?? '');
                                 if (!empty($person['profile_image']) && file_exists($profileImagePath)): ?>
-                                    <img src="<?= $profileImagePath ?>" alt="Profile Image">
+                                    <img src="<?= $profileImagePath ?>" alt="Profile Image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;">
                                 <?php else: ?>
                                     <div class="initials">
                                         <?= !empty($person['name']) ? substr(trim($person['name']), 0, 1) : '?' ?>
@@ -113,7 +138,7 @@
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Status:</span>
-                                <span class="status <?= $status_class ?>"><?= htmlspecialchars($person['military_status_name'] ?? 'N/A') ?></span>
+                                <span class="status <?= $status_class ?>"><?= htmlspecialchars($person['military_status'] ?? 'N/A') ?></span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Medical:</span>
@@ -131,6 +156,14 @@
                                 <span class="detail-label">Superior:</span>
                                 <span><?= htmlspecialchars($person['superior_name'] ?? 'None') ?></span>
                             </div>
+                            <?php if (!empty($person['file_upload'])): ?>
+                                <div class="detail-item">
+                                    <span class="detail-label">Document:</span>
+                                    <a href="../uploads/<?= htmlspecialchars($person['file_upload']) ?>" target="_blank" class="document-link">
+                                        <i class="fas fa-file-alt"></i> View
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <div class="card-actions">

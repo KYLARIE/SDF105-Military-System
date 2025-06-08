@@ -1,3 +1,6 @@
+<?php ob_start(); ?>
+
+
 <link rel="stylesheet" href="filter.css">
 <link rel="stylesheet" href="index.css">
 <?php
@@ -191,11 +194,6 @@ $superiors = $pdo->query("SELECT id, name FROM people ORDER BY name")->fetchAll(
                         Has Email
                     </label>
 
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="has_file" value="1" <?= $filters['has_file'] ? 'checked' : '' ?>>
-                        <span class="checkmark"></span>
-                        Has Document
-                    </label>
                 </div>
 
                 <div class="form-group actions">
@@ -210,3 +208,4 @@ $superiors = $pdo->query("SELECT id, name FROM people ORDER BY name")->fetchAll(
         </form>
 
     </div>
+    <?php ob_end_flush(); ?>
